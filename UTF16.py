@@ -105,8 +105,13 @@ def decode(string):
 
 	for char in string:
 		longhex = hex(ord(char))
+		length = len(longhex)
 
-		if (len(longhex) == 5): # If the hex() function cut of the leading 0; Example: 0x0aff -> 0xaff
+		if (length != 5 and length != 6): # If the input char is UTF-8 Encoded simply add it to the output
+			hexcodes.append(longhex)
+			continue
+
+		if (length == 5): # If the hex() function cut of the leading 0; Example: 0x0aff -> 0xaff
 			longhex = longhex[:2] + '0' + longhex[2:] # return the leading 0
 		
 		hexcodes.append(longhex[:4])
