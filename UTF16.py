@@ -36,30 +36,29 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = #
 
 
-
 import argparse
 
 
 def main():
 	args = parser()
 
-	if (args.s != None):
-		raw = args.s
-	elif (args.f != None):
-		file = open(args.f, 'r', encoding="utf8")
+	if (args.string != None):
+		raw = args.string
+	elif (args.file != None):
+		file = open(args.file, 'r', encoding="utf8")
 		raw = file.read()
 		file.close()
 	else:
 		print("No input was detected. Please specify some source using the -s or -f options")
 		return
 
-	if (args.d):
+	if (args.decode):
 		output = decode(raw)
 	else:
 		output = encode(raw)
 
-	if (args.o):
-		file = open(args.o, 'w', encoding="utf8")
+	if (args.output):
+		file = open(args.output, 'w', encoding="utf8")
 		file.write(output)
 		file.close()
 	else:
@@ -69,10 +68,12 @@ def main():
 def parser():
 	parser = argparse.ArgumentParser()
 
-	parser.add_argument('-s', type=str, required=False) # Input string
-	parser.add_argument('-f', type=str, required=False) # Input file
-	parser.add_argument('-o', type=str, required=False)
-	parser.add_argument('-d', action='store_true', required=False)
+	textInput = parser.add_mutually_exclusive_group(required=True)
+	textInput.add_argument('-s', '--string', type=str, required=False, help="the input in string format") # Input string
+	textInput.add_argument('-f', '--file', type=str, required=False, help="the location of a input file") # Input file
+
+	parser.add_argument('-o', '--output', type=str, required=False, help="the location of the output file (Defaults to printing in the console if the option is not present)")
+	parser.add_argument('-d', '--decode', action='store_true', required=False, help="decodes the input (Defaults to encoding if the option is not present)")
 
 	args = parser.parse_args()
 
